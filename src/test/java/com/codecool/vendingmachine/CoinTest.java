@@ -28,7 +28,7 @@ public class CoinTest {
     }
 
     @Test
-    public void should_ReturnTenGrosz_When_PassCorrectValues() {
-        Assert.assertEquals(Coin.TEN_GROSZ, Coin.getCoinByProperties(16.50, 2.51));
+    public void should_ThrowException_when_WrongValuesPassed(){
+        assertThrows(IllegalArgumentException.class, ()->Coin.getCoinByProperties(1, 2));
     }
 }
