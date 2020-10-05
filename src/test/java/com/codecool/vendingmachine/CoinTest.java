@@ -10,6 +10,7 @@ public class CoinTest {
     @Test
     public void should_ReturnRightCoin_when_PassCorrectValues(){
         assertAll("Should return right coins when pass correct values",
+                ()->assertEquals(Coin.FIVE_GROSZ, Coin.getCoinByProperties(19.50,2.59)),
                 ()->assertEquals(Coin.TEN_GROSZ, Coin.getCoinByProperties(16.50, 2.51)),
                 ()->assertEquals(Coin.TWENTY_GROSZ, Coin.getCoinByProperties(18.50, 3.22)),
                 ()->assertEquals(Coin.FIFTY_GROSZ, Coin.getCoinByProperties(20.50, 3.94)),

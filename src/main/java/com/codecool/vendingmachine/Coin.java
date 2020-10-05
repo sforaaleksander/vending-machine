@@ -1,6 +1,7 @@
 package com.codecool.vendingmachine;
 
 public enum Coin {
+    FIVE_GROSZ(19.50,2.59),
     TEN_GROSZ(16.50, 2.51),
     TWENTY_GROSZ(18.50, 3.22),
     FIFTY_GROSZ(20.50, 3.94),
