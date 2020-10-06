@@ -44,6 +44,4 @@ public enum Coin {
         }
         throw new IllegalArgumentException("Machine could not recognize the coin");
     }
-
-
 }

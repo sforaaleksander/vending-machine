@@ -1,8 +1,8 @@
 package com.codecool.vendingmachine;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class Purchase {
@@ -35,29 +35,74 @@ public class Purchase {
             collectCoins();
             view.displayUserBalance(balance);
         }
-//        for (Map.Entry<Coin, Integer> e : balance.getCoins().entrySet()) {
-//            System.out.println(e.getKey() + ":  " + e.getValue());
-//        }
         giveBackChange();
     }
 
     private void giveBackChange() {
         BigDecimal change = balance.getInserted().subtract(balance.getRequired());
         Map<Coin, Integer> changeCoins = new HashMap<>();
-        while (change.compareTo(BigDecimal.ZERO) > 0) {
-            for (Coin coin : balance.getCoins().keySet()) {
-                if (coin.value.compareTo(change) <= 0 && balance.getCoins().get(coin) > 0) {
-                    changeCoins.merge(coin, 1, Integer::sum);
-                    change = change.subtract(coin.value);
-                    balance.getCoins().merge(coin, -1, Integer::sum);
-                }
+        List<Map<Coin, Integer>> possibleChangeCombinations = getPossibleChangeCombinations(change);
+
+        printCombinations(possibleChangeCombinations);
+    }
+
+    private void printCombinations(List<Map<Coin, Integer>> possibleChangeCombinations) {
+        for (Map<Coin, Integer> map : possibleChangeCombinations) {
+            System.out.println("COMBINATION: ");
+            for (Map.Entry<Coin, Integer> entry : map.entrySet()) {
+                System.out.println(entry.getKey() + ": " + entry.getValue());
             }
-        }
-        for (Map.Entry<Coin, Integer> e : changeCoins.entrySet()) {
-            System.out.println("Giving back change: ");
-            System.out.println(e.getKey() + ":  " + e.getValue());
+            System.out.println("\n\n\n");
         }
     }
+
+    private List<Map<Coin, Integer>> getPossibleChangeCombinations(BigDecimal change) {
+        List<Map<Coin, Integer>> combinations = new ArrayList<>();
+        BigDecimal tempChange;
+        List<Coin> coins = balance.getCoins().keySet()
+                                .stream()
+                                .sorted(Comparator
+                                        .comparingDouble(e->e.value.doubleValue()))
+                                .sorted(Comparator.reverseOrder())
+                                .collect(Collectors.toList());
+        for (Iterator<Coin> it = coins.iterator(); it.hasNext();) {
+            tempChange = new BigDecimal(String.valueOf(change));
+            it.next();
+            Map<Coin, Integer> changeCoins = new HashMap<>();
+            for (Coin coin : coins) {
+                while (tempChange.compareTo(BigDecimal.ZERO) > 0
+                        && coin.value.compareTo(tempChange) <= 0
+                        && balance.getCoins().get(coin) > 0) {
+                    changeCoins.merge(coin, 1, Integer::sum);
+                    tempChange = tempChange.subtract(coin.value);
+                }
+            }
+            if (!changeCoins.isEmpty() && !combinations.contains(changeCoins)) {
+                combinations.add(changeCoins);
+            }
+            it.remove();
+        }
+        return combinations;
+    }
+
+
+//    private void giveBackChange() {
+//        BigDecimal change = balance.getInserted().subtract(balance.getRequired());
+//        Map<Coin, Integer> changeCoins = new HashMap<>();
+//        while (change.compareTo(BigDecimal.ZERO) > 0) {
+//            for (Coin coin : balance.getCoins().keySet()) {
+//                if (coin.value.compareTo(change) <= 0 && balance.getCoins().get(coin) > 0) {
+//                    changeCoins.merge(coin, 1, Integer::sum);
+//                    change = change.subtract(coin.value);
+//                    balance.getCoins().merge(coin, -1, Integer::sum);
+//                }
+//            }
+//        }
+//        for (Map.Entry<Coin, Integer> e : changeCoins.entrySet()) {
+//            System.out.println("Giving back change: ");
+//            System.out.println(e.getKey() + ":  " + e.getValue());
+//        }
+//    }
 
     private void collectCoins() {
         String stringCoin = "";
