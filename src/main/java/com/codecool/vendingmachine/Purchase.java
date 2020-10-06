@@ -42,9 +42,20 @@ public class Purchase {
         BigDecimal change = balance.getInserted().subtract(balance.getRequired());
         Map<Coin, Integer> changeCoins = new HashMap<>();
         List<Map<Coin, Integer>> possibleChangeCombinations = getPossibleChangeCombinations(change);
-
-        printCombinations(possibleChangeCombinations);
+        List<Map<Coin, Integer>> sortedPossibilities = possibleChangeCombinations
+                                                            .stream()
+                                                            .sorted(Comparator.comparing(e->e.values()
+                                                                    .stream()
+                                                                    .mapToInt(Number::intValue)
+                                                                    .sum())).collect(Collectors.toList());
+        printCombinations(sortedPossibilities);
+        choosePossibleCombination(sortedPossibilities);
     }
+
+    private void choosePossibleCombination(List<Map<Coin, Integer>> sortedPossibilities) {
+
+    }
+
 
     private void printCombinations(List<Map<Coin, Integer>> possibleChangeCombinations) {
         for (Map<Coin, Integer> map : possibleChangeCombinations) {
@@ -56,9 +67,26 @@ public class Purchase {
         }
     }
 
+//    private List<Map<Coin, Integer>> getPossibleChangeCombinations(BigDecimal change) {
+//        List<Map<Coin, Integer>> combinations = new ArrayList<>();
+//        BigDecimal tempChange = new BigDecimal(String.valueOf(change));
+//        List<Coin> coins = balance.getCoins().keySet()
+//                                .stream()
+//                                .sorted(Comparator
+//                                        .comparingDouble(e->e.value.doubleValue()))
+//                                .sorted(Comparator.reverseOrder())
+//                                .collect(Collectors.toList());
+//        List<Coin> firstChildren = coins.stream().filter(e->e.value.compareTo(tempChange) <=0).collect(Collectors.toList());
+//        for (Coin coin : coins) {
+//            calculateChildren()
+//        }
+//        return combinations;
+//    }
+
     private List<Map<Coin, Integer>> getPossibleChangeCombinations(BigDecimal change) {
         List<Map<Coin, Integer>> combinations = new ArrayList<>();
         BigDecimal tempChange;
+        Balance tempBalance;
         List<Coin> coins = balance.getCoins().keySet()
                                 .stream()
                                 .sorted(Comparator
@@ -67,17 +95,19 @@ public class Purchase {
                                 .collect(Collectors.toList());
         for (Iterator<Coin> it = coins.iterator(); it.hasNext();) {
             tempChange = new BigDecimal(String.valueOf(change));
+            tempBalance = balance;
             it.next();
             Map<Coin, Integer> changeCoins = new HashMap<>();
             for (Coin coin : coins) {
                 while (tempChange.compareTo(BigDecimal.ZERO) > 0
                         && coin.value.compareTo(tempChange) <= 0
-                        && balance.getCoins().get(coin) > 0) {
+                        && tempBalance.getCoins().get(coin) > 0) {
                     changeCoins.merge(coin, 1, Integer::sum);
                     tempChange = tempChange.subtract(coin.value);
+                    tempBalance.getCoins().merge(coin, -1, Integer::sum);
                 }
             }
-            if (!changeCoins.isEmpty() && !combinations.contains(changeCoins)) {
+            if (!changeCoins.isEmpty() && !combinations.contains(changeCoins) && isCombinationEqualsChange(changeCoins, change)) {
                 combinations.add(changeCoins);
             }
             it.remove();
@@ -85,24 +115,11 @@ public class Purchase {
         return combinations;
     }
 
-
-//    private void giveBackChange() {
-//        BigDecimal change = balance.getInserted().subtract(balance.getRequired());
-//        Map<Coin, Integer> changeCoins = new HashMap<>();
-//        while (change.compareTo(BigDecimal.ZERO) > 0) {
-//            for (Coin coin : balance.getCoins().keySet()) {
-//                if (coin.value.compareTo(change) <= 0 && balance.getCoins().get(coin) > 0) {
-//                    changeCoins.merge(coin, 1, Integer::sum);
-//                    change = change.subtract(coin.value);
-//                    balance.getCoins().merge(coin, -1, Integer::sum);
-//                }
-//            }
-//        }
-//        for (Map.Entry<Coin, Integer> e : changeCoins.entrySet()) {
-//            System.out.println("Giving back change: ");
-//            System.out.println(e.getKey() + ":  " + e.getValue());
-//        }
-//    }
+    private boolean isCombinationEqualsChange(Map<Coin, Integer> changeCoins, BigDecimal change) {
+        double totalFromCombination = changeCoins.entrySet()
+                .stream().mapToDouble(e->e.getKey().value.multiply(new BigDecimal(e.getValue().toString())).doubleValue()).sum();
+        return change.doubleValue() == totalFromCombination;
+    }
 
     private void collectCoins() {
         String stringCoin = "";
