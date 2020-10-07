@@ -1,4 +1,4 @@
-package com.codecool.vendingmachine;
+package com.codecool.vendingmachine.model;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -14,10 +14,10 @@ public enum Coin {
     TWO_ZLOTY(new BigDecimal("21.50"), new BigDecimal("5.21"), "2ZL", new BigDecimal("2.0")),
     FIVE_ZLOTY(new BigDecimal("24.00"), new BigDecimal("6.54"), "5ZL", new BigDecimal("5.0"));
 
-    BigDecimal dimensions;
-    BigDecimal weight;
-    String stringCoin;
-    BigDecimal value;
+    public BigDecimal dimensions;
+    public BigDecimal weight;
+    public String stringCoin;
+    public BigDecimal value;
     static List<String> strings = Arrays.stream(Coin.values()).map(e->e.stringCoin).collect(Collectors.toList());
 
     Coin(BigDecimal dimensions, BigDecimal weight, String stringCoin, BigDecimal value) {

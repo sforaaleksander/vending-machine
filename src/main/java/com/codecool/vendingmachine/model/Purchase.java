@@ -1,4 +1,8 @@
-package com.codecool.vendingmachine;
+package com.codecool.vendingmachine.model;
+
+import com.codecool.vendingmachine.model.tree.CoinTree;
+import com.codecool.vendingmachine.input.Input;
+import com.codecool.vendingmachine.view.View;
 
 import java.math.BigDecimal;
 import java.util.*;

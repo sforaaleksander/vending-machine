@@ -1,4 +1,4 @@
-package com.codecool.vendingmachine;
+package com.codecool.vendingmachine.model;
 
 import java.math.BigDecimal;
 import java.util.HashMap;

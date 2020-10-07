@@ -1,5 +1,9 @@
-package com.codecool.vendingmachine;
+package com.codecool.vendingmachine.view;
 
+
+import com.codecool.vendingmachine.model.Balance;
+import com.codecool.vendingmachine.model.Coin;
+import com.codecool.vendingmachine.model.Product;
 
 import java.util.Map;
 

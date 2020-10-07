@@ -1,4 +1,4 @@
-package com.codecool.vendingmachine;
+package com.codecool.vendingmachine.model;
 
 public class Run {
     private boolean run;

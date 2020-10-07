@@ -1,4 +1,7 @@
-package com.codecool.vendingmachine;
+package com.codecool.vendingmachine.model;
+
+import com.codecool.vendingmachine.input.Input;
+import com.codecool.vendingmachine.view.View;
 
 public class Machine {
     private Purchase purchase;

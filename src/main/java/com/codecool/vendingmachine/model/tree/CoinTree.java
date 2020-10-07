@@ -1,4 +1,6 @@
-package com.codecool.vendingmachine;
+package com.codecool.vendingmachine.model.tree;
+
+import com.codecool.vendingmachine.model.Coin;
 
 import java.math.BigDecimal;
 import java.util.*;

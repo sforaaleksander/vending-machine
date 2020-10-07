@@ -1,5 +1,6 @@
 package com.codecool.vendingmachine;
 
+import com.codecool.vendingmachine.model.Coin;
 import org.junit.Test;
 
 import java.math.BigDecimal;

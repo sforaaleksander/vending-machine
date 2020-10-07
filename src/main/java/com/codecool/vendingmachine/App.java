@@ -1,5 +1,7 @@
 package com.codecool.vendingmachine;
 
+import com.codecool.vendingmachine.model.Machine;
+
 /**
  * Hello world!
  *
