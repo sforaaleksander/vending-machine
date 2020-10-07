@@ -1,5 +1,6 @@
 package com.codecool.vendingmachine.model.tree;
 
+import com.codecool.vendingmachine.model.Balance;
 import com.codecool.vendingmachine.model.Coin;
 
 import java.math.BigDecimal;
@@ -12,26 +13,28 @@ public class CoinTree {
     private BigDecimal change;
     private List<Coin> coinList;
     private List<Map<Coin, Integer>> allPaths;
+    private Balance balance;
 
 
-    public CoinTree(BigDecimal change) {
+    public CoinTree(BigDecimal change, Balance balance) {
         this.change = change;
         this.root = new Node(change, new HashMap<>());
         coinList = Stream.of(Coin.values()).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
         this.allPaths = new ArrayList<>();
-        createTree(root);
+        this.balance = balance;
+//        createTree(root);
     }
 
     public List<Map<Coin, Integer>> getAllPaths() {
         return allPaths;
     }
 
-    public void findAllPaths(){
+    public void findAllPaths() {
         traverse(root);
     }
 
     private void traverse(Node node) {
-        if (node.getRemainingChange().compareTo(BigDecimal.ZERO)==0 && !allPaths.contains(node.getCollectedCoins())) {
+        if (node.getRemainingChange().compareTo(BigDecimal.ZERO) == 0 && !allPaths.contains(node.getCollectedCoins())) {
             allPaths.add(node.getCollectedCoins());
         }
         for (Node child : node.getChildren()) {
@@ -39,12 +42,40 @@ public class CoinTree {
         }
     }
 
-    private void createTree(Node node){
+//    private void createTree(Node node) {
+//        for (Coin coin : coinList) {
+//            if (coin.value.compareTo(node.getRemainingChange()) <= 0) {
+//                Node childNode = node.insertNode(coin);
+//                createTree(childNode);
+//            }
+//        }
+//    }
+
+    public Map<Coin, Integer> getCombinationByTree(Node node) {
         for (Coin coin : coinList) {
             if (coin.value.compareTo(node.getRemainingChange()) <= 0) {
                 Node childNode = node.insertNode(coin);
-                createTree(childNode);
+                getCombinationByTree(childNode);
+            }
+            if (node.getRemainingChange().compareTo(BigDecimal.ZERO) == 0 && isCombinationAvailable(node.getCollectedCoins())) {
+                return node.getCollectedCoins();
             }
         }
+        throw new ArithmeticException("Could not give back the change");
+    }
+
+    private boolean isCombinationAvailable(Map<Coin, Integer> coins) {
+        Map<Coin, Integer> availableCoins = this.balance.getCoins();
+        for (Coin coin : coins.keySet()) {
+            if (coins.get(coin).compareTo(availableCoins.get(coin)) < 0 ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public Node getRoot() {
+        return root;
     }
 }
+
