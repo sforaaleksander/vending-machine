@@ -7,7 +7,7 @@ public enum Product {
     PRETZEL(2, "Pretzel", new BigDecimal("1.80")),
     SPRING_WATER(3, "Spring water", new BigDecimal("2.10")),
     CHUPA_CHUPA(4, "Chupa-chups", new BigDecimal("0.90")),
-    ORANGE_JUICE(5, "Orange juice", new BigDecimal("3.70"));
+    ORANGE_JUICE(5, "Orange juice", new BigDecimal("3.40"));
 
     int id;
     String name;

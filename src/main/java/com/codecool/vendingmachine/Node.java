@@ -1,6 +1,7 @@
 package com.codecool.vendingmachine;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Node {
@@ -27,10 +28,10 @@ public class Node {
 
     public void insertNode(Coin coin){
         BigDecimal change = this.remainingChange.subtract(coin.value);
-        List<Coin> coinList = this.collectedCoins;
+        List<Coin> coinList = new ArrayList<>(collectedCoins);
         coinList.add(coin);
         Node node = new Node(change, coinList);
-        children.add(node);
+        this.children.add(node);
     }
 
 }
