@@ -1,6 +1,5 @@
 package com.codecool.vendingmachine.model;
 
-import com.codecool.vendingmachine.model.tree.CoinTree;
 import com.codecool.vendingmachine.input.Input;
 import com.codecool.vendingmachine.view.View;
 
@@ -23,14 +22,6 @@ public class Purchase {
         this.run = run;
     }
 
-    public Product getChosenProduct() {
-        return chosenProduct;
-    }
-
-    public void setChosenProduct(Product chosenProduct) {
-        this.chosenProduct = chosenProduct;
-    }
-
     public void start() {
         chooseProduct();
         if(chosenProduct==null) return;
@@ -44,34 +35,16 @@ public class Purchase {
 
     private void giveBackChange() {
         BigDecimal change = balance.calculateChange();
-//        List<Map<Coin, Integer>> possibleChangeCombinations = getPossibleChangeCombinations(change);
+        List<Map<Coin, Integer>> possibleChangeCombinations = getPossibleChangeCombinations(change);
 
-//        List<Map<Coin, Integer>> possibleChangeCombinations = getPossibleChangeCombinationsByTree(change);
-//        List<Map<Coin, Integer>> sortedPossibilities = sortCombinations(possibleChangeCombinations);
-//        printCombinations(sortedPossibilities);
-//        if (sortedPossibilities.isEmpty()) {
-//            spitBackInsertedCoins();
-//            view.transactionCanceled();
-//            return;
-//        }
-//        view.printGiveChange(sortedPossibilities.get(0));
-        Map<Coin, Integer> changeCoins = getCombinationByTree(change);
-        view.printGiveChange(changeCoins);
-    }
-
-//    private List<Map<Coin, Integer>> getPossibleChangeCombinationsByTree(BigDecimal change) {
-//        CoinTree coinTree = new CoinTree(change, balance);
-//        coinTree.findAllPaths();
-//        System.out.println("NUMBER OF COMBINATIONS: " + coinTree.getAllPaths().size());
-//        return coinTree.getAllPaths();
-//    }
-
-    private Map<Coin, Integer> getCombinationByTree(BigDecimal change) {
-        CoinTree coinTree = new CoinTree(change, balance);
-//        coinTree.findAllPaths();
-//        System.out.println("NUMBER OF COMBINATIONS: " + coinTree.getAllPaths().size());
-//        return coinTree.getAllPaths();
-        return coinTree.getCombinationByTree(coinTree.getRoot());
+        List<Map<Coin, Integer>> sortedPossibilities = sortCombinations(possibleChangeCombinations);
+        printCombinations(sortedPossibilities);
+        if (sortedPossibilities.isEmpty()) {
+            spitBackInsertedCoins();
+            view.transactionCanceled();
+            return;
+        }
+        view.printGiveChange(sortedPossibilities.get(0));
     }
 
     private List<Map<Coin, Integer>> sortCombinations(List<Map<Coin, Integer>> possibleChangeCombinations) {
