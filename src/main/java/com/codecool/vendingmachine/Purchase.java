@@ -39,20 +39,37 @@ public class Purchase {
     }
 
     private void giveBackChange() {
-        BigDecimal change = balance.getInserted().subtract(balance.getRequired());
-        Map<Coin, Integer> changeCoins = new HashMap<>();
-        List<Map<Coin, Integer>> possibleChangeCombinations = getPossibleChangeCombinations(change);
-        List<Map<Coin, Integer>> sortedPossibilities = possibleChangeCombinations
-                                                            .stream()
-                                                            .sorted(Comparator.comparing(e->e.values()
-                                                                    .stream()
-                                                                    .mapToInt(Number::intValue)
-                                                                    .sum())).collect(Collectors.toList());
+        BigDecimal change = balance.calculateChange();
+//        List<Map<Coin, Integer>> possibleChangeCombinations = getPossibleChangeCombinations(change);
+        List<Map<Coin, Integer>> possibleChangeCombinations = getPossibleChangeCombinationsByTree(change);
+
+        List<Map<Coin, Integer>> sortedPossibilities = sortCombinations(possibleChangeCombinations);
         printCombinations(sortedPossibilities);
-        choosePossibleCombination(sortedPossibilities);
+        if (sortedPossibilities.isEmpty()) {
+            spitBackInsertedCoins();
+            view.transactionCanceled();
+            return;
+        }
+        view.printGiveChange(sortedPossibilities.get(0));
     }
 
-    private void choosePossibleCombination(List<Map<Coin, Integer>> sortedPossibilities) {
+    private List<Map<Coin, Integer>> getPossibleChangeCombinationsByTree(BigDecimal change) {
+        CoinTree coinTree = new CoinTree(change);
+        coinTree.findAllPaths();
+        System.out.println("NUMBER OF COMBINATIONS: " + coinTree.getAllPaths().size());
+        return coinTree.getAllPaths();
+    }
+
+    private List<Map<Coin, Integer>> sortCombinations(List<Map<Coin, Integer>> possibleChangeCombinations) {
+        return possibleChangeCombinations
+                .stream()
+                .sorted(Comparator.comparing(e -> e.values()
+                        .stream()
+                        .mapToInt(Number::intValue)
+                        .sum())).collect(Collectors.toList());
+    }
+
+    private void spitBackInsertedCoins() {
 
     }
 
@@ -66,22 +83,6 @@ public class Purchase {
             System.out.println("\n\n\n");
         }
     }
-
-//    private List<Map<Coin, Integer>> getPossibleChangeCombinations(BigDecimal change) {
-//        List<Map<Coin, Integer>> combinations = new ArrayList<>();
-//        BigDecimal tempChange = new BigDecimal(String.valueOf(change));
-//        List<Coin> coins = balance.getCoins().keySet()
-//                                .stream()
-//                                .sorted(Comparator
-//                                        .comparingDouble(e->e.value.doubleValue()))
-//                                .sorted(Comparator.reverseOrder())
-//                                .collect(Collectors.toList());
-//        List<Coin> firstChildren = coins.stream().filter(e->e.value.compareTo(tempChange) <=0).collect(Collectors.toList());
-//        for (Coin coin : coins) {
-//            calculateChildren()
-//        }
-//        return combinations;
-//    }
 
     private List<Map<Coin, Integer>> getPossibleChangeCombinations(BigDecimal change) {
         List<Map<Coin, Integer>> combinations = new ArrayList<>();

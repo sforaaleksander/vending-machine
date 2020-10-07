@@ -1,6 +1,8 @@
 package com.codecool.vendingmachine;
 
 
+import java.util.Map;
+
 public class View {
     String welcomeHeader = "Welcome to the Vending Machine! \nSelect the product by inputting its number:\nOr press zero to exit";
     String balanceInsertedInfo = "You have inserted: ";
@@ -32,5 +34,16 @@ public class View {
     public void mainDisplay() {
         displayWelcomeHeader();
         displayProducts();
+    }
+
+    public void printGiveChange(Map<Coin, Integer> map) {
+        for (Map.Entry<Coin, Integer> entry : map.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+    }
+
+    public void transactionCanceled() {
+        System.out.println("Could not give back change for the given product.");
+        System.out.println("Giving you back the coins.");
     }
 }

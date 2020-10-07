@@ -2,16 +2,19 @@ package com.codecool.vendingmachine;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Node {
     private BigDecimal remainingChange;
     private List<Node> children;
-    private List<Coin> collectedCoins;
+    private Map<Coin, Integer> collectedCoins;
 
-    public Node(BigDecimal remainingChange, List<Coin> collectedCoins) {
+    public Node(BigDecimal remainingChange, Map<Coin, Integer> collectedCoins) {
         this.remainingChange = remainingChange;
         this.collectedCoins = collectedCoins;
+        this.children = new ArrayList<>();
     }
 
     public BigDecimal getRemainingChange() {
@@ -22,16 +25,17 @@ public class Node {
         return children;
     }
 
-    public List<Coin> getCollectedCoins() {
+    public Map<Coin, Integer> getCollectedCoins() {
         return collectedCoins;
     }
 
-    public void insertNode(Coin coin){
+    public Node insertNode(Coin coin){
         BigDecimal change = this.remainingChange.subtract(coin.value);
-        List<Coin> coinList = new ArrayList<>(collectedCoins);
-        coinList.add(coin);
-        Node node = new Node(change, coinList);
+        Map<Coin, Integer> coinMap = new HashMap<>(collectedCoins);
+        coinMap.merge(coin, 1, Integer::sum);
+        Node node = new Node(change, coinMap);
         this.children.add(node);
+        return node;
     }
 
 }

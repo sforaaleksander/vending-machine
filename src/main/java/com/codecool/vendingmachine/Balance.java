@@ -20,13 +20,13 @@ public class Balance {
     }
 
     private void populateMap() {
-        coins.put(Coin.FIVE_GROSZ, 0);
-        coins.put(Coin.TEN_GROSZ, 0);
-        coins.put(Coin.TWENTY_GROSZ, 3);
-        coins.put(Coin.FIFTY_GROSZ, 1);
-        coins.put(Coin.ONE_ZLOTY, 0);
-        coins.put(Coin.TWO_ZLOTY, 3);
-        coins.put(Coin.FIVE_ZLOTY, 1);
+        coins.put(Coin.FIVE_GROSZ, 5);
+        coins.put(Coin.TEN_GROSZ, 5);
+        coins.put(Coin.TWENTY_GROSZ, 5);
+        coins.put(Coin.FIFTY_GROSZ, 5);
+        coins.put(Coin.ONE_ZLOTY, 5);
+        coins.put(Coin.TWO_ZLOTY, 5);
+        coins.put(Coin.FIVE_ZLOTY, 5);
     }
 
     public BigDecimal getInserted() {
@@ -47,5 +47,9 @@ public class Balance {
 
     public boolean isPaid(){
         return inserted.compareTo(required) >= 0;
+    }
+
+    public BigDecimal calculateChange() {
+        return inserted.subtract(required);
     }
 }
