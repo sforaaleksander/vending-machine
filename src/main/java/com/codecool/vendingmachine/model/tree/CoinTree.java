@@ -55,7 +55,7 @@ public class CoinTree {
         for (Coin coin : coinList) {
             if (coin.value.compareTo(node.getRemainingChange()) <= 0) {
                 Node childNode = node.insertNode(coin);
-                getCombinationByTree(childNode);
+                return getCombinationByTree(childNode);
             }
             if (node.getRemainingChange().compareTo(BigDecimal.ZERO) == 0 && isCombinationAvailable(node.getCollectedCoins())) {
                 return node.getCollectedCoins();
@@ -67,7 +67,7 @@ public class CoinTree {
     private boolean isCombinationAvailable(Map<Coin, Integer> coins) {
         Map<Coin, Integer> availableCoins = this.balance.getCoins();
         for (Coin coin : coins.keySet()) {
-            if (coins.get(coin).compareTo(availableCoins.get(coin)) < 0 ) {
+            if (coins.get(coin).compareTo(availableCoins.get(coin)) > 0 ) {
                 return false;
             }
         }

@@ -56,6 +56,7 @@ public class Purchase {
 //        }
 //        view.printGiveChange(sortedPossibilities.get(0));
         Map<Coin, Integer> changeCoins = getCombinationByTree(change);
+        view.printGiveChange(changeCoins);
     }
 
 //    private List<Map<Coin, Integer>> getPossibleChangeCombinationsByTree(BigDecimal change) {
