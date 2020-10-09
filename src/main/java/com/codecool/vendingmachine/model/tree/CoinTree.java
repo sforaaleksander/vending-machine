@@ -22,7 +22,7 @@ public class CoinTree {
         coinList = Stream.of(Coin.values()).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
         this.allPaths = new ArrayList<>();
         this.balance = balance;
-//        createTree(root);
+        createTree(root);
     }
 
     public List<Map<Coin, Integer>> getAllPaths() {
@@ -42,40 +42,13 @@ public class CoinTree {
         }
     }
 
-//    private void createTree(Node node) {
-//        for (Coin coin : coinList) {
-//            if (coin.value.compareTo(node.getRemainingChange()) <= 0) {
-//                Node childNode = node.insertNode(coin);
-//                createTree(childNode);
-//            }
-//        }
-//    }
-
-    public Map<Coin, Integer> getCombinationByTree(Node node) {
+    private void createTree(Node node) {
         for (Coin coin : coinList) {
             if (coin.value.compareTo(node.getRemainingChange()) <= 0) {
                 Node childNode = node.insertNode(coin);
-                return getCombinationByTree(childNode);
-            }
-            if (node.getRemainingChange().compareTo(BigDecimal.ZERO) == 0 && isCombinationAvailable(node.getCollectedCoins())) {
-                return node.getCollectedCoins();
+                createTree(childNode);
             }
         }
-        throw new ArithmeticException("Could not give back the change");
-    }
-
-    private boolean isCombinationAvailable(Map<Coin, Integer> coins) {
-        Map<Coin, Integer> availableCoins = this.balance.getCoins();
-        for (Coin coin : coins.keySet()) {
-            if (coins.get(coin).compareTo(availableCoins.get(coin)) > 0 ) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public Node getRoot() {
-        return root;
     }
 }
 
