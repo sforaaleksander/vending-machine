@@ -34,7 +34,8 @@ public class CoinTree {
     }
 
     private void traverse(Node node) {
-        if (node.getRemainingChange().compareTo(BigDecimal.ZERO) == 0 && !allPaths.contains(node.getCollectedCoins())) {
+        if (node.getRemainingChange().compareTo(BigDecimal.ZERO) == 0
+                && !allPaths.contains(node.getCollectedCoins())) {
             allPaths.add(node.getCollectedCoins());
         }
         for (Node child : node.getChildren()) {
